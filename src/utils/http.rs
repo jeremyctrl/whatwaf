@@ -18,11 +18,11 @@ pub fn fetch(url: &str) -> Result<HttpResponse, reqwest::Error> {
         .collect();
     let body = res.text().unwrap_or_default();
 
-    Ok(HttpResponse { 
-        status: status, 
-        content_length: content_length, 
-        headers: headers, 
-        body: body 
+    Ok(HttpResponse {
+        status: status,
+        content_length: content_length,
+        headers: headers,
+        body: body,
     })
 }
 

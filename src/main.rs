@@ -6,7 +6,7 @@ mod detectors;
 
 use clap::Parser;
 
-use crate::{detector::run_detectors, utils::http::fetch, utils::http::add_param};
+use crate::{detector::run_detectors, utils::http::add_param, utils::http::fetch};
 
 fn main() {
     let args = cli::Args::parse();
@@ -26,10 +26,10 @@ fn main() {
         ("lfi", (Some("file"), Some("../../../../etc/passwd"))),
     ];
 
-    println!("[*] checking {}", url);  
+    println!("[*] checking {}", url);
     println!("[*] running {} probes", probes.len());
 
-    for (probe_name, (param, payload)) in probes.iter() {        
+    for (probe_name, (param, payload)) in probes.iter() {
         let probe_url = if let (Some(k), Some(v)) = (param, payload) {
             println!("[*] {} probe: payload='{}'", probe_name, v);
             add_param(&url, k, v)

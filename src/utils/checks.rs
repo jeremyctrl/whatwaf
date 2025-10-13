@@ -2,7 +2,9 @@ use crate::utils::http::HttpResponse;
 
 // headers
 pub fn has_header(resp: &HttpResponse, key: &str) -> bool {
-    resp.headers.iter().any(|(k, _)| k.eq_ignore_ascii_case(key))
+    resp.headers
+        .iter()
+        .any(|(k, _)| k.eq_ignore_ascii_case(key))
 }
 
 pub fn header_contains(resp: &HttpResponse, key: &str, value: &str) -> bool {
@@ -12,9 +14,9 @@ pub fn header_contains(resp: &HttpResponse, key: &str, value: &str) -> bool {
 }
 
 pub fn header_matches_regex(resp: &HttpResponse, key: &str, pattern: &regex::Regex) -> bool {
-    resp.headers.iter().any(|(k, v)| {
-        k.eq_ignore_ascii_case(key) && pattern.is_match(v)
-    })
+    resp.headers
+        .iter()
+        .any(|(k, v)| k.eq_ignore_ascii_case(key) && pattern.is_match(v))
 }
 
 // body
