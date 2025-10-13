@@ -1,6 +1,9 @@
 mod cli;
 mod utils;
 
+mod detector;
+mod detectors;
+
 use clap::Parser;
 
 fn main() {
