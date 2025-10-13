@@ -6,8 +6,9 @@ pub struct HttpResponse {
     pub body: String,
 }
 
-pub fn fetch(url: &str) -> HttpResponse {
-    let res = reqwest::blocking::get(url).unwrap();
+pub fn fetch(url: &str) -> Result<HttpResponse, reqwest::Error> {
+    let res = reqwest::blocking::get(url)?;
+
     let status = res.status().as_u16();
     let content_length = res.content_length();
     let headers = res
@@ -17,10 +18,10 @@ pub fn fetch(url: &str) -> HttpResponse {
         .collect();
     let body = res.text().unwrap_or_default();
 
-    HttpResponse { 
+    Ok(HttpResponse { 
         status: status, 
         content_length: content_length, 
         headers: headers, 
         body: body 
-    }
+    })
 }
