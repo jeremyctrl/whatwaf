@@ -1519,6 +1519,7 @@ dependencies = [
  "inventory",
  "regex",
  "reqwest",
+ "url",
 ]
 
 [[package]]

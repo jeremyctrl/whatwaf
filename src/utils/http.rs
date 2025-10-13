@@ -25,3 +25,12 @@ pub fn fetch(url: &str) -> Result<HttpResponse, reqwest::Error> {
         body: body 
     })
 }
+
+pub fn add_param(original: &str, key: &str, value: &str) -> String {
+    if let Ok(mut url) = url::Url::parse(original) {
+        url.query_pairs_mut().append_pair(key, value);
+        return url.to_string();
+    }
+
+    original.to_string()
+}
