@@ -7,4 +7,3 @@ pub trait Detector: Sync + Send {
 
 pub mod cloudflare;
 pub mod incapsula;
-pub mod wordfence;
