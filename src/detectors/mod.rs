@@ -8,4 +8,5 @@ pub trait Detector: Sync + Send {
 pub mod barracuda;
 pub mod cloudflare;
 pub mod incapsula;
+pub mod kona;
 pub mod wordfence;
