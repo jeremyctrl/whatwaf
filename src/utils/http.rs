@@ -6,8 +6,8 @@ pub struct HttpResponse {
     pub body: String,
 }
 
-pub fn fetch(url: &str) -> Result<HttpResponse, reqwest::Error> {
-    let res = reqwest::blocking::get(url)?;
+pub fn fetch(client: &reqwest::blocking::Client, url: &str) -> Result<HttpResponse, reqwest::Error> {
+    let res = client.get(url).send()?;
 
     let status = res.status().as_u16();
     let content_length = res.content_length();

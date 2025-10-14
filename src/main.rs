@@ -26,6 +26,16 @@ fn main() {
         ("lfi", (Some("file"), Some("../../../../etc/passwd"))),
     ];
 
+    let client_builder = reqwest::blocking::Client::builder();
+
+    let client = match client_builder.build() {
+        Ok(c) => c,
+        Err(e) => {
+            eprintln!("[!] failed to build reqwest client: {}", e);
+            return;
+        }
+    };
+
     println!("[*] checking {}", url);
     println!("[*] running {} probes", probes.len());
 
@@ -38,7 +48,7 @@ fn main() {
             url.clone()
         };
 
-        let resp = match fetch(&probe_url) {
+        let resp = match fetch(&client, &probe_url) {
             Ok(r) => r,
             Err(e) => {
                 eprintln!("\t[-] error {}", e);
