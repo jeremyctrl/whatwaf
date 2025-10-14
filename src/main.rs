@@ -7,6 +7,7 @@ mod detectors;
 use std::time::Duration;
 
 use clap::Parser;
+use reqwest::Proxy;
 
 use crate::{detector::run_detectors, utils::http::add_param, utils::http::fetch};
 
@@ -28,8 +29,18 @@ fn main() {
         ("lfi", (Some("file"), Some("../../../../etc/passwd"))),
     ];
 
-    let client_builder = reqwest::blocking::Client::builder()
-        .timeout(Duration::from_secs(args.timeout));
+    let mut client_builder =
+        reqwest::blocking::Client::builder().timeout(Duration::from_secs(args.timeout));
+
+    if let Some(proxy) = args.proxy {
+        match Proxy::all(&proxy) {
+            Ok(px) => client_builder = client_builder.proxy(px),
+            Err(e) => {
+                eprintln!("[!] invalid proxy '{}': {}", proxy, e);
+                return;
+            }
+        }
+    }
 
     let client = match client_builder.build() {
         Ok(c) => c,
