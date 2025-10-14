@@ -14,6 +14,15 @@ use crate::{detector::run_detectors, utils::http::add_param, utils::http::fetch}
 fn main() {
     let args = cli::Args::parse();
 
+    if args.list {
+        println!("[~] whatwaf can currently recognize:");
+        for d in inventory::iter::<&'static dyn detectors::Detector> {
+            println!("\t{}", d.name());
+        }
+
+        return
+    }
+
     let url = match args.url {
         Some(u) => u,
         None => {

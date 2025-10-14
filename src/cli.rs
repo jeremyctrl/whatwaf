@@ -13,4 +13,8 @@ pub struct Args {
     /// Route requests via this proxy
     #[arg(short = 'x', long = "proxy")]
     pub proxy: Option<String>,
+
+    /// List recognized WAFs
+    #[arg(short = 'l', long = "list", default_value_t = false)]
+    pub list: bool,
 }
