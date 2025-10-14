@@ -4,6 +4,8 @@ mod utils;
 mod detector;
 mod detectors;
 
+use std::time::Duration;
+
 use clap::Parser;
 
 use crate::{detector::run_detectors, utils::http::add_param, utils::http::fetch};
@@ -26,7 +28,8 @@ fn main() {
         ("lfi", (Some("file"), Some("../../../../etc/passwd"))),
     ];
 
-    let client_builder = reqwest::blocking::Client::builder();
+    let client_builder = reqwest::blocking::Client::builder()
+        .timeout(Duration::from_secs(args.timeout));
 
     let client = match client_builder.build() {
         Ok(c) => c,
