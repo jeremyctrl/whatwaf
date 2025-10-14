@@ -9,4 +9,5 @@ pub mod barracuda;
 pub mod cloudflare;
 pub mod incapsula;
 pub mod kona;
+pub mod sucuri;
 pub mod wordfence;
