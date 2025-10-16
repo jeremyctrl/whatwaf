@@ -9,7 +9,7 @@ impl Detector for Cloudfront {
     }
 
     fn detect(&self, resp: &HttpResponse) -> bool {
-        if checks::header_contains(resp, "x-cache", "Error from cloudfront") && checks::is_forbidden(resp) {
+        if checks::header_contains(resp, "x-cache", "Error from cloudfront") {
             return true;
         }
 
