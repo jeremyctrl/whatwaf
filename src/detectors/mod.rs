@@ -10,5 +10,6 @@ pub mod cloudflare;
 pub mod cloudfront;
 pub mod incapsula;
 pub mod kona;
+pub mod nexusguard;
 pub mod sucuri;
 pub mod wordfence;
