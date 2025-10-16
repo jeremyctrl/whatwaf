@@ -28,4 +28,5 @@ whatwaf -l
     Sucuri
     Cloudfront
     Kona Site Defender
+    Datadome
 ```
