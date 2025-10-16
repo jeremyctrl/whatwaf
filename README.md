@@ -13,3 +13,19 @@ cargo install whatwaf
 ```bash
 whatwaf https://example.com
 ```
+
+# Detections
+
+```
+whatwaf -l
+[~] whatwaf can currently recognize:
+    Cloudflare
+    Barracuda
+    Janusec
+    Wordfence
+    Incapsula
+    NexusGuard
+    Sucuri
+    Cloudfront
+    Kona Site Defender
+```
