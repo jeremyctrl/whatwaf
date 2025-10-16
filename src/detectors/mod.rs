@@ -9,6 +9,7 @@ pub mod barracuda;
 pub mod cloudflare;
 pub mod cloudfront;
 pub mod incapsula;
+pub mod janusec;
 pub mod kona;
 pub mod nexusguard;
 pub mod sucuri;
