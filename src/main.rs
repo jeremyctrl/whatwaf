@@ -20,7 +20,7 @@ fn main() {
             println!("\t{}", d.name());
         }
 
-        return
+        return;
     }
 
     let url = match args.url {
@@ -40,6 +40,10 @@ fn main() {
 
     let mut client_builder =
         reqwest::blocking::Client::builder().timeout(Duration::from_secs(args.timeout));
+
+    if !args.location {
+        client_builder = client_builder.redirect(reqwest::redirect::Policy::none());
+    }
 
     if let Some(proxy) = args.proxy {
         match Proxy::all(&proxy) {

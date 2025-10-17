@@ -10,6 +10,10 @@ pub struct Args {
     #[arg(short = 'T', long = "timeout", default_value_t = 10)]
     pub timeout: u64,
 
+    // Follow redirects
+    #[arg(short = 'L', long = "location", default_value_t = false)]
+    pub location: bool,
+
     /// Route requests via this proxy
     #[arg(short = 'x', long = "proxy")]
     pub proxy: Option<String>,
