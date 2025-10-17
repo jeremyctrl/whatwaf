@@ -6,6 +6,7 @@ pub trait Detector: Sync + Send {
 }
 
 pub mod aspa;
+pub mod astra;
 pub mod barracuda;
 pub mod cloudflare;
 pub mod cloudfront;

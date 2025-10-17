@@ -31,4 +31,5 @@ whatwaf -l
     Datadome
     DotDefender
     ASPA
+    Astra
 ```
