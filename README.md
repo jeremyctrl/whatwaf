@@ -29,4 +29,5 @@ whatwaf -l
     Cloudfront
     Kona Site Defender
     Datadome
+    DotDefender
 ```
