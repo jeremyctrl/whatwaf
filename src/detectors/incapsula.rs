@@ -9,7 +9,11 @@ impl Detector for Incapsula {
     }
 
     fn detect(&self, resp: &HttpResponse) -> bool {
-        if checks::body_contains(resp, "incapsula incident id:") && checks::is_forbidden(resp) {
+        if checks::header_contains(resp, "set-cookie", "incap_ses") {
+            return true;
+        }
+
+        if checks::header_contains(resp, "set-cookie", "visid_incap") {
             return true;
         }
 
