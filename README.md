@@ -16,20 +16,19 @@ whatwaf https://example.com
 
 # Detections
 
-```
-whatwaf -l
-[~] whatwaf can currently recognize:
-    Cloudflare
-    Barracuda
-    Janusec
-    Wordfence
-    Incapsula
-    NexusGuard
-    Sucuri
-    Cloudfront
-    Kona Site Defender
-    Datadome
-    DotDefender
-    ASPA
-    Astra
-```
+| WAF | Vendor | Country of Origin |
+| :--- | :------ | :----------------- |
+| **Astra** | Astra Security | 🇮🇳 |
+| **ASPA** | Aspa Engineering Co. | 🇮🇷 |
+| **Barracuda** | Barracuda Networks, Inc. | 🇺🇸 |
+| **Cloudflare**  WAF| Cloudflare, Inc. | 🇺🇸 |
+| **Cloudfront** WAF | Amazon Web Services | 🇺🇸 |
+| **Datadome** | Datadome | 🇫🇷 |
+| **DotDefender** | Applicure Technologies | 🇮🇱 |
+| **Incapsula** | Imperva, Inc. | 🇺🇸 |
+| **Janusec** Application Gateway | JANUSEC | 🇺🇳* |
+| **Kona Site Defender** | Akamai Technologies | 🇺🇸 |
+| **NexusGuard** | NexusGuard Inc. | 🇸🇬 |
+| **Sucuri** | Sucuri, Inc | 🇺🇸 |
+
+*Country of Origin is not clearly documented.
