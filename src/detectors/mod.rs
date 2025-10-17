@@ -5,6 +5,7 @@ pub trait Detector: Sync + Send {
     fn detect(&self, resp: &HttpResponse) -> bool;
 }
 
+pub mod aspa;
 pub mod barracuda;
 pub mod cloudflare;
 pub mod cloudfront;
