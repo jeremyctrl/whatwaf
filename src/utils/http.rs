@@ -27,7 +27,7 @@ pub fn fetch(client: &reqwest::blocking::Client, url: &str) -> Result<HttpRespon
 }
 
 pub fn add_param(original: &str, key: &str, value: &str) -> String {
-    if let Ok(mut url) = url::Url::parse(original) {
+    if let Ok(mut url) = reqwest::Url::parse(original) {
         url.query_pairs_mut().append_pair(key, value);
         return url.to_string();
     }

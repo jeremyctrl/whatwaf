@@ -1520,7 +1520,6 @@ dependencies = [
  "once_cell",
  "regex",
  "reqwest",
- "url",
 ]
 
 [[package]]
