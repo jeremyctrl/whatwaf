@@ -22,7 +22,7 @@ whatwaf https://example.com
 | **Astra** | Astra Security | 🇮🇳 |
 | **ASPA** | Aspa Engineering Co. | 🇮🇷 |
 | **Barracuda** | Barracuda Networks, Inc. | 🇺🇸 |
-| **Cloudflare**  WAF| Cloudflare, Inc. | 🇺🇸 |
+| **Cloudflare** WAF | Cloudflare, Inc. | 🇺🇸 |
 | **Cloudfront** WAF | Amazon Web Services | 🇺🇸 |
 | **Datadome** | Datadome | 🇫🇷 |
 | **DotDefender** | Applicure Technologies | 🇮🇱 |
