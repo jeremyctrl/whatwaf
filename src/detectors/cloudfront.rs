@@ -1,5 +1,6 @@
 use crate::detectors::Detector;
-use crate::utils::{checks, http::HttpResponse};
+use crate::utils::checks::MatchMode;
+use crate::utils::http::HttpResponse;
 
 pub struct Cloudfront;
 
@@ -9,11 +10,7 @@ impl Detector for Cloudfront {
     }
 
     fn detect(&self, resp: &HttpResponse) -> bool {
-        if checks::header_contains(resp, "x-cache", "Error from cloudfront") {
-            return true;
-        }
-
-        false
+        resp.header_has("x-cache", &["Error from cloudfront"], MatchMode::Any)
     }
 }
 

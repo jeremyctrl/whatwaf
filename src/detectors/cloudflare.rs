@@ -1,5 +1,6 @@
 use crate::detectors::Detector;
-use crate::utils::{checks, http::HttpResponse};
+use crate::utils::checks::MatchMode;
+use crate::utils::http::HttpResponse;
 
 pub struct Cloudflare;
 
@@ -9,14 +10,10 @@ impl Detector for Cloudflare {
     }
 
     fn detect(&self, resp: &HttpResponse) -> bool {
-        if checks::body_contains(resp, "Sorry, you have been blocked")
-            && checks::body_contains(resp, "Cloudflare Ray ID")
-            && checks::is_forbidden(resp)
-        {
-            return true;
-        }
-
-        false
+        resp.body_has(
+            &["Sorry, you have been blocked", "Cloudflare Ray ID"],
+            MatchMode::All,
+        ) && resp.is_forbidden()
     }
 }
 

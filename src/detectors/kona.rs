@@ -1,5 +1,6 @@
 use crate::detectors::Detector;
-use crate::utils::{checks, http::HttpResponse};
+use crate::utils::checks::MatchMode;
+use crate::utils::http::HttpResponse;
 
 pub struct Kona;
 
@@ -9,19 +10,9 @@ impl Detector for Kona {
     }
 
     fn detect(&self, resp: &HttpResponse) -> bool {
-        if checks::body_contains(resp, "edgesuite") && checks::is_forbidden(resp) {
-            return true;
-        }
-
-        if checks::has_header(resp, "x-reference-error") {
-            return true;
-        }
-
-        if checks::header_contains(resp, "server", "AkamiGHost") {
-            return true;
-        }
-
-        false
+        resp.body_has(&["edgesuite"], MatchMode::Any) && resp.is_forbidden()
+            || resp.has_header(&["x-reference-error"], MatchMode::Any)
+            || resp.header_has("server", &["AkamiGHost"], MatchMode::Any)
     }
 }
 

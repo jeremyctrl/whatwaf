@@ -1,5 +1,6 @@
 use crate::detectors::Detector;
-use crate::utils::{checks, http::HttpResponse};
+use crate::utils::checks::MatchMode;
+use crate::utils::http::HttpResponse;
 
 pub struct Barracuda;
 
@@ -9,11 +10,7 @@ impl Detector for Barracuda {
     }
 
     fn detect(&self, resp: &HttpResponse) -> bool {
-        if checks::body_contains(resp, "Barracuda Networks") && checks::is_not_found(resp) {
-            return true;
-        }
-
-        false
+        resp.body_has(&["Barracuda Networks"], MatchMode::Any) && resp.is_not_found()
     }
 }
 

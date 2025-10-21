@@ -1,5 +1,6 @@
 use crate::detectors::Detector;
-use crate::utils::{checks, http::HttpResponse};
+use crate::utils::checks::MatchMode;
+use crate::utils::http::HttpResponse;
 
 pub struct Datadome;
 
@@ -9,11 +10,7 @@ impl Detector for Datadome {
     }
 
     fn detect(&self, resp: &HttpResponse) -> bool {
-        if checks::has_header(resp, "x-datadome") {
-            return true;
-        }
-
-        false
+        resp.has_header(&["x-datadome"], MatchMode::Any)
     }
 }
 

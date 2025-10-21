@@ -1,5 +1,6 @@
 use crate::detectors::Detector;
-use crate::utils::{checks, http::HttpResponse};
+use crate::utils::checks::MatchMode;
+use crate::utils::http::HttpResponse;
 
 pub struct ArvanCloud;
 
@@ -9,11 +10,7 @@ impl Detector for ArvanCloud {
     }
 
     fn detect(&self, resp: &HttpResponse) -> bool {
-        if checks::header_contains(resp, "server", "ArvanCloud") {
-            return true;
-        }
-
-        false
+        resp.header_has("server", &["ArvanCloud"], MatchMode::Any)
     }
 }
 

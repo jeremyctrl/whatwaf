@@ -1,5 +1,6 @@
 use crate::detectors::Detector;
-use crate::utils::{checks, http::HttpResponse};
+use crate::utils::checks::MatchMode;
+use crate::utils::http::HttpResponse;
 
 pub struct DotDefender;
 
@@ -9,11 +10,7 @@ impl Detector for DotDefender {
     }
 
     fn detect(&self, resp: &HttpResponse) -> bool {
-        if checks::body_contains(resp, "dotDefender Blocked Your Request") {
-            return true;
-        }
-
-        false
+        resp.body_has(&["dotDefender Blocked Your Request"], MatchMode::Any)
     }
 }
 

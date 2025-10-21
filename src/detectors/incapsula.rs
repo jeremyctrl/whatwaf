@@ -1,5 +1,6 @@
 use crate::detectors::Detector;
-use crate::utils::{checks, http::HttpResponse};
+use crate::utils::checks::MatchMode;
+use crate::utils::http::HttpResponse;
 
 pub struct Incapsula;
 
@@ -9,15 +10,7 @@ impl Detector for Incapsula {
     }
 
     fn detect(&self, resp: &HttpResponse) -> bool {
-        if checks::header_contains(resp, "set-cookie", "incap_ses") {
-            return true;
-        }
-
-        if checks::header_contains(resp, "set-cookie", "visid_incap") {
-            return true;
-        }
-
-        false
+        resp.header_has("set-cookie", &["incap_ses", "visid_incap"], MatchMode::Any)
     }
 }
 

@@ -1,54 +1,98 @@
 use crate::utils::http::HttpResponse;
+use regex::Regex;
 
-// headers
-pub fn has_header(resp: &HttpResponse, key: &str) -> bool {
-    resp.headers
-        .iter()
-        .any(|(k, _)| k.eq_ignore_ascii_case(key))
+pub enum MatchMode {
+    Any,
+    All,
 }
 
-pub fn header_contains(resp: &HttpResponse, key: &str, value: &str) -> bool {
-    resp.headers.iter().any(|(k, v)| {
-        k.eq_ignore_ascii_case(key) && v.to_lowercase().contains(&value.to_lowercase())
-    })
-}
+impl HttpResponse {
+    // headers
+    pub fn has_header(&self, keys: &[&str], mode: MatchMode) -> bool {
+        match mode {
+            MatchMode::Any => self
+                .headers
+                .iter()
+                .any(|(k, _)| keys.iter().any(|key| k.eq_ignore_ascii_case(key))),
+            MatchMode::All => keys.iter().all(|key| {
+                self.headers
+                    .iter()
+                    .any(|(k, _)| k.eq_ignore_ascii_case(key))
+            }),
+        }
+    }
 
-pub fn header_matches_regex(resp: &HttpResponse, key: &str, pattern: &regex::Regex) -> bool {
-    resp.headers
-        .iter()
-        .any(|(k, v)| k.eq_ignore_ascii_case(key) && pattern.is_match(v))
-}
+    pub fn header_has(&self, key: &str, texts: &[&str], mode: MatchMode) -> bool {
+        self.headers.iter().any(|(k, v)| {
+            if !k.eq_ignore_ascii_case(key) {
+                return false;
+            }
 
-// body
-pub fn body_contains(resp: &HttpResponse, text: &str) -> bool {
-    resp.body.to_lowercase().contains(&text.to_lowercase())
-}
+            let val = v.to_lowercase();
+            match mode {
+                MatchMode::Any => texts.iter().any(|t| val.contains(&t.to_lowercase())),
+                MatchMode::All => texts.iter().all(|t| val.contains(&t.to_lowercase())),
+            }
+        })
+    }
 
-pub fn body_matches_regex(resp: &HttpResponse, pattern: &regex::Regex) -> bool {
-    pattern.is_match(&resp.body)
-}
+    pub fn header_matches(&self, key: &str, patterns: &[Regex], mode: MatchMode) -> bool {
+        self.headers.iter().any(|(k, v)| {
+            if !k.eq_ignore_ascii_case(key) {
+                return false;
+            }
 
-// response
-pub fn is_forbidden(resp: &HttpResponse) -> bool {
-    resp.status == 403
-}
+            match mode {
+                MatchMode::Any => patterns.iter().any(|re| re.is_match(v)),
+                MatchMode::All => patterns.iter().all(|re| re.is_match(v)),
+            }
+        })
+    }
 
-pub fn is_not_found(resp: &HttpResponse) -> bool {
-    resp.status == 404
-}
+    pub fn headers_match(&self, patterns: &[Regex]) -> bool {
+        self.headers
+            .iter()
+            .any(|(k, v)| patterns.iter().any(|re| re.is_match(k) || re.is_match(v)))
+    }
 
-pub fn is_success(resp: &HttpResponse) -> bool {
-    (200..300).contains(&resp.status)
-}
+    // body
+    pub fn body_has(&self, texts: &[&str], mode: MatchMode) -> bool {
+        let body_lc = self.body.to_lowercase();
+        match mode {
+            MatchMode::Any => texts.iter().any(|t| body_lc.contains(&t.to_lowercase())),
+            MatchMode::All => texts.iter().all(|t| body_lc.contains(&t.to_lowercase())),
+        }
+    }
 
-pub fn is_error(resp: &HttpResponse) -> bool {
-    (400..600).contains(&resp.status)
-}
+    pub fn body_matches(&self, patterns: &[Regex], mode: MatchMode) -> bool {
+        match mode {
+            MatchMode::Any => patterns.iter().any(|re| re.is_match(&self.body)),
+            MatchMode::All => patterns.iter().all(|re| re.is_match(&self.body)),
+        }
+    }
 
-pub fn is_redirect(resp: &HttpResponse) -> bool {
-    (300..400).contains(&resp.status)
-}
+    // response
+    pub fn is_forbidden(&self) -> bool {
+        self.status == 403
+    }
 
-pub fn is_empty(resp: &HttpResponse) -> bool {
-    resp.body.trim().is_empty() && resp.content_length.unwrap_or(0) == 0
+    pub fn is_not_found(&self) -> bool {
+        self.status == 404
+    }
+
+    pub fn is_success(&self) -> bool {
+        (200..300).contains(&self.status)
+    }
+
+    pub fn is_error(&self) -> bool {
+        (400..600).contains(&self.status)
+    }
+
+    pub fn is_redirect(&self) -> bool {
+        (300..400).contains(&self.status)
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.body.trim().is_empty() && self.content_length.unwrap_or(0) == 0
+    }
 }

@@ -1,5 +1,6 @@
 use crate::detectors::Detector;
-use crate::utils::{checks, http::HttpResponse};
+use crate::utils::checks::MatchMode;
+use crate::utils::http::HttpResponse;
 
 pub struct Astra;
 
@@ -9,11 +10,10 @@ impl Detector for Astra {
     }
 
     fn detect(&self, resp: &HttpResponse) -> bool {
-        if checks::body_contains(resp, "This website is protected by getastra.com") {
-            return true;
-        }
-
-        false
+        resp.body_has(
+            &["This website is protected by getastra.com"],
+            MatchMode::Any,
+        )
     }
 }
 
