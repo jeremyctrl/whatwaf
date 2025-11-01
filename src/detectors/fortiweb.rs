@@ -4,15 +4,15 @@ use crate::utils::http::HttpResponse;
 use once_cell::sync::Lazy;
 use regex::Regex;
 
-pub struct FortiGuard;
+pub struct FortiWeb;
 
 static BODY: Lazy<Vec<Regex>> = Lazy::new(|| {
     vec![Regex::new(r"Attack ID:\s*2(?:0*\d{2})").unwrap()] // https://docs.fortinet.com/document/fortiweb/8.0.1/log-message-reference/445549/attack
 });
 
-impl Detector for FortiGuard {
+impl Detector for FortiWeb {
     fn name(&self) -> &'static str {
-        "FortiGuard"
+        "FortiWeb"
     }
 
     fn detect(&self, resp: &HttpResponse) -> bool {
@@ -22,5 +22,5 @@ impl Detector for FortiGuard {
 }
 
 inventory::submit! {
-    &FortiGuard as &dyn Detector
+    &FortiWeb as &dyn Detector
 }
