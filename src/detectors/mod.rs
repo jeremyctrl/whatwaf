@@ -18,5 +18,6 @@ pub mod incapsula;
 pub mod janusec;
 pub mod kona;
 pub mod nexusguard;
+pub mod safeline;
 pub mod sucuri;
 pub mod wordfence;
