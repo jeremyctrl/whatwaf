@@ -66,7 +66,7 @@ whatwaf https://example.com
 | **Incapsula** | Imperva, Inc. | 🇺🇸 |
 | **Janusec** Application Gateway | JANUSEC | 🇺🇳* |
 | **Kona Site Defender** | Akamai Technologies | 🇺🇸 |
-| **NexusGuard** | NexusGuard Inc. | 🇸🇬 |
+| **NexusGuard** | NexusGuard, Inc. | 🇸🇬 |
 | **Sucuri** | Sucuri, Inc | 🇺🇸 |
 | **Wordfence** | Defiant Inc. | 🇺🇸 |
 
