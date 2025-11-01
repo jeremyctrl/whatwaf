@@ -62,6 +62,7 @@ whatwaf https://example.com
 | **Cloudfront** WAF | Amazon Web Services | 🇺🇸 |
 | **Datadome** | Datadome | 🇫🇷 |
 | **DotDefender** | Applicure Technologies | 🇮🇱 |
+| **FortiWeb** | Fortinet, Inc. | 🇺🇸 |
 | **Incapsula** | Imperva, Inc. | 🇺🇸 |
 | **Janusec** Application Gateway | JANUSEC | 🇺🇳* |
 | **Kona Site Defender** | Akamai Technologies | 🇺🇸 |
