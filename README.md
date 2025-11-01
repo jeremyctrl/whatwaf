@@ -68,5 +68,6 @@ whatwaf https://example.com
 | **Kona Site Defender** | Akamai Technologies | 🇺🇸 |
 | **NexusGuard** | NexusGuard Inc. | 🇸🇬 |
 | **Sucuri** | Sucuri, Inc | 🇺🇸 |
+| **Wordfence** | Defiant Inc. | 🇺🇸 |
 
 *Country of Origin is not clearly documented.
