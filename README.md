@@ -70,5 +70,6 @@ whatwaf https://example.com
 | **SafeLine** | Chaitin Tech | 🇨🇳 |
 | **Sucuri** | Sucuri, Inc | 🇺🇸 |
 | **Wordfence** | Defiant Inc. | 🇺🇸 |
+| **Zenedge** | Oracle Corporation | 🇺🇸 | 
 
 *Country of Origin is not clearly documented.
