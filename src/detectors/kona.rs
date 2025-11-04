@@ -12,7 +12,7 @@ impl Detector for Kona {
     fn detect(&self, resp: &HttpResponse) -> bool {
         resp.body_has(&["edgesuite"], MatchMode::Any) && resp.is_forbidden()
             || resp.has_header(&["x-reference-error"], MatchMode::Any)
-            || resp.header_has("server", &["AkamiGHost"], MatchMode::Any)
+            || resp.header_has("server", &["AkamaiGHost"], MatchMode::Any)
     }
 }
 
