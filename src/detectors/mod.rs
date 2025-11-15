@@ -14,6 +14,7 @@ pub mod cloudfront;
 pub mod datadome;
 pub mod dotdefender;
 pub mod fortiweb;
+pub mod frontdoor;
 pub mod incapsula;
 pub mod janusec;
 pub mod kona;
