@@ -15,10 +15,12 @@ pub struct ScanConfig {
     pub proxy: Option<String>,
 }
 
-pub struct DetectionResult {
-    pub waf_name: String,
+#[derive(Clone, Debug)]
+pub struct ProbeResult {
+    pub probe_name: String,
+    pub url: String,
     pub status: u16,
-    pub probe: String,
+    pub detected_waf: Option<String>,
 }
 
 pub fn list_detectors() -> Vec<&'static str> {
@@ -28,10 +30,14 @@ pub fn list_detectors() -> Vec<&'static str> {
         .collect()
 }
 
-pub fn scan_url(
+pub fn scan_url<F>(
     url: &str,
     config: ScanConfig,
-) -> Result<Option<DetectionResult>, Box<dyn std::error::Error>> {
+    mut on_probe: Option<F>,
+) -> Result<Option<ProbeResult>, Box<dyn std::error::Error>>
+where
+    F: FnMut(&ProbeResult) -> bool,
+{
     let probes = vec![
         ("plain request", None),
         ("xss", Some(("q", "<script>alert(1)</script>"))),
@@ -51,6 +57,8 @@ pub fn scan_url(
 
     let client = builder.build()?;
 
+    let mut last_result = None;
+
     for (probe_name, probe) in probes {
         let probe_url = match probe {
             Some((k, v)) => add_param(url, k, v),
@@ -59,14 +67,22 @@ pub fn scan_url(
 
         let resp = fetch(&client, &probe_url)?;
 
-        if let Some(name) = run_detectors(&resp) {
-            return Ok(Some(DetectionResult {
-                waf_name: name.to_string(),
-                status: resp.status,
-                probe: probe_name.to_string(),
-            }));
+        let result = ProbeResult {
+            probe_name: probe_name.to_string(),
+            url: probe_url,
+            status: resp.status,
+            detected_waf: run_detectors(&resp).map(|s| s.to_string()),
+        };
+
+        if let Some(cb) = on_probe.as_mut() {
+            if !cb(&result) {
+                last_result = Some(result);
+                break;
+            }
         }
+
+        last_result = Some(result);
     }
 
-    Ok(None)
+    Ok(last_result)
 }
