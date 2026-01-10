@@ -4,6 +4,7 @@ mod utils;
 
 pub use detectors::Detector;
 
+use std::fmt;
 use std::time::Duration;
 
 use reqwest::{Proxy, blocking::Client};
@@ -25,6 +26,38 @@ pub struct ProbeResult {
     pub detected_waf: Option<String>,
 }
 
+#[derive(Debug)]
+pub enum ScanError {
+    InvalidProxy {
+        proxy: String,
+        source: reqwest::Error,
+    },
+    ClientBuild(reqwest::Error),
+    Request {
+        url: String,
+        source: reqwest::Error,
+    },
+}
+
+impl fmt::Display for ScanError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ScanError::InvalidProxy { proxy, source } => {
+                write!(f, "invalid proxy '{}': {}", proxy, source)
+            }
+            ScanError::ClientBuild(e) => {
+                write!(f, "failed to build HTTP client: {}", e)
+            }
+
+            ScanError::Request { url, source } => {
+                write!(f, "request failed for {}: {}", url, source)
+            }
+        }
+    }
+}
+
+impl std::error::Error for ScanError {}
+
 pub fn list_detectors() -> Vec<&'static str> {
     inventory::iter::<&'static dyn detectors::Detector>
         .into_iter()
@@ -36,7 +69,7 @@ pub fn scan_url<F>(
     url: &str,
     config: ScanConfig,
     mut on_probe: Option<F>,
-) -> Result<Option<ProbeResult>, Box<dyn std::error::Error>>
+) -> Result<Option<ProbeResult>, ScanError>
 where
     F: FnMut(&ProbeResult) -> bool,
 {
@@ -53,11 +86,15 @@ where
         builder = builder.redirect(reqwest::redirect::Policy::none());
     }
 
-    if let Some(proxy) = config.proxy {
-        builder = builder.proxy(Proxy::all(proxy)?);
+    if let Some(proxy) = &config.proxy {
+        let px = Proxy::all(proxy).map_err(|e| ScanError::InvalidProxy {
+            proxy: proxy.clone(),
+            source: e,
+        })?;
+        builder = builder.proxy(px);
     }
 
-    let client = builder.build()?;
+    let client = builder.build().map_err(ScanError::ClientBuild)?;
 
     let mut last_result = None;
 
@@ -67,7 +104,10 @@ where
             None => url.to_string(),
         };
 
-        let resp = fetch(&client, &probe_url)?;
+        let resp = fetch(&client, &probe_url).map_err(|e| ScanError::Request {
+            url: probe_url.clone(),
+            source: e,
+        })?;
 
         let result = ProbeResult {
             probe_name: probe_name.to_string(),
