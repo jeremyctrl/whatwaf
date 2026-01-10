@@ -1,6 +1,8 @@
-pub mod detector;
-pub mod detectors;
-pub mod utils;
+mod detector;
+mod detectors;
+mod utils;
+
+pub use detectors::Detector;
 
 use std::time::Duration;
 
