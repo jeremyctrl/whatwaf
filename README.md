@@ -26,26 +26,61 @@ Detection is based on:
 
 ## Installation
 
+### CLI
+
 Install via [Cargo](https://doc.rust-lang.org/stable/cargo/):
 
 ```bash
 cargo install whatwaf
 ```
 
+### API
+
+Add `whatwaf` to your project:
+
+```bash
+cargo add whatwaf
+```
+
 ## Usage
+
+### API
+
+```rust
+use whatwaf::{scan_url, ScanConfig};
+
+let result = scan_url(
+    "https://example.com",
+    ScanConfig {
+        timeout: 10,
+        follow_redirects: true,
+        proxy: None,
+    },
+    None,
+)?;
+
+if let Some(last) = result {
+    if let Some(waf) = last.detected_waf {
+        println!("WAF detected: {}", waf);
+    } else {
+        println!("No WAF detected");
+    }
+}
+```
+
+### CLI
 
 ```bash
 whatwaf https://example.com
 ```
 
-### Example
+#### Example
 
 ```bash
-[*] checking https://example.com
-[*] running 4 probes
-[*] plain request probe: payload=None
-        [-] no detection
-[*] xss probe: payload='<script>alert(1)</script>'
+[*] scanning https://example.com
+[*] plain request probe: url=https://example.com
+        [-] no detection (status=200)
+[*] xss probe: url=https://example.com/?q=<script>alert(1)</script>
         [+] waf=cloudflare status=403
 [~] the site https://example.com is behind Cloudflare waf
 ```
