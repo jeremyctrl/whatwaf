@@ -1,23 +1,16 @@
 mod cli;
-mod utils;
-
-mod detector;
-mod detectors;
-
-use std::time::Duration;
 
 use clap::Parser;
-use reqwest::Proxy;
 
-use crate::{detector::run_detectors, utils::http::add_param, utils::http::fetch};
+use whatwaf::{ProbeResult, ScanConfig, list_detectors, scan_url};
 
 fn main() {
     let args = cli::Args::parse();
 
     if args.list {
         println!("[~] whatwaf can currently recognize:");
-        for d in inventory::iter::<&'static dyn detectors::Detector> {
-            println!("\t{}", d.name());
+        for d in list_detectors() {
+            println!("\t{}", d);
         }
 
         return;
@@ -31,66 +24,43 @@ fn main() {
         }
     };
 
-    let probes = vec![
-        ("plain request", (None, None)),
-        ("xss", (Some("q"), Some("<script>alert(1)</script>"))),
-        ("sql injection", (Some("id"), Some("' OR '1'=1'"))),
-        ("lfi", (Some("file"), Some("../../../../etc/passwd"))),
-    ];
-
-    let mut client_builder =
-        reqwest::blocking::Client::builder().timeout(Duration::from_secs(args.timeout));
-
-    if !args.location {
-        client_builder = client_builder.redirect(reqwest::redirect::Policy::none());
-    }
-
-    if let Some(proxy) = args.proxy {
-        match Proxy::all(&proxy) {
-            Ok(px) => client_builder = client_builder.proxy(px),
-            Err(e) => {
-                eprintln!("[!] invalid proxy '{}': {}", proxy, e);
-                return;
-            }
-        }
-    }
-
-    let client = match client_builder.build() {
-        Ok(c) => c,
-        Err(e) => {
-            eprintln!("[!] failed to build reqwest client: {}", e);
-            return;
-        }
+    let config = ScanConfig {
+        timeout: args.timeout,
+        follow_redirects: args.location,
+        proxy: args.proxy,
     };
 
-    println!("[*] checking {}", url);
-    println!("[*] running {} probes", probes.len());
+    println!("[*] scanning {}", url);
 
-    for (probe_name, (param, payload)) in probes.iter() {
-        let probe_url = if let (Some(k), Some(v)) = (param, payload) {
-            println!("[*] {} probe: payload='{}'", probe_name, v);
-            add_param(&url, k, v)
-        } else {
-            println!("[*] {} probe: payload=None", probe_name);
-            url.clone()
-        };
+    let mut detected = false;
 
-        let resp = match fetch(&client, &probe_url) {
-            Ok(r) => r,
-            Err(e) => {
-                eprintln!("\t[-] error {}", e);
-                continue;
+    let res = scan_url(
+        &url,
+        config,
+        Some(|r: &ProbeResult| {
+            println!("[*] {} probe: url={}", r.probe_name, r.url);
+
+            match &r.detected_waf {
+                Some(waf) => {
+                    println!("\t[+] waf={} status={}", waf.to_lowercase(), r.status);
+                    println!("[~] the site {} is behind {} waf", url, waf);
+                    detected = true;
+                    false
+                }
+                None => {
+                    println!("\t[-] no detection (status={})", r.status);
+                    true
+                }
             }
-        };
+        }),
+    );
 
-        if let Some(name) = run_detectors(&resp) {
-            println!("\t[+] waf={} status={}", name.to_lowercase(), resp.status);
-            println!("[~] the site {} is behind {} waf", url, name);
-            return;
-        }
-
-        println!("\t[-] no detection");
+    if let Err(e) = res {
+        eprintln!("[!] scan failed: {}", e);
+        return;
     }
 
-    println!("[~] no waf detected for {}", url);
+    if !detected {
+        println!("[~] no waf detected for {}", url);
+    }
 }
