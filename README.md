@@ -103,6 +103,7 @@ whatwaf https://example.com
 | **Janusec** Application Gateway | JANUSEC | 🇺🇳* |
 | **Kona Site Defender** | Akamai Technologies | 🇺🇸 |
 | **NexusGuard** | NexusGuard, Inc. | 🇸🇬 |
+| **Radware** WAF | Radware Ltd. | 🇮🇱 |
 | **SafeLine** | Chaitin Tech | 🇨🇳 |
 | **Sucuri** | Sucuri, Inc | 🇺🇸 |
 | **Wordfence** | Defiant Inc. | 🇺🇸 |
