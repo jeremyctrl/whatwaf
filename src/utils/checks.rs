@@ -95,4 +95,31 @@ impl HttpResponse {
     pub fn is_empty(&self) -> bool {
         self.body.trim().is_empty() && self.content_length.unwrap_or(0) == 0
     }
+
+    // assets
+    pub fn has_asset(&self) -> bool {
+        !self.assets.is_empty()
+    }
+
+    pub fn asset_hash_has(&self, texts: &[&str], mode: MatchMode) -> bool {
+        self.assets.iter().any(|a| match mode {
+            MatchMode::Any => texts.iter().any(|t| a.hash.contains(t)),
+            MatchMode::All => texts
+                .iter()
+                .all(|t| self.assets.iter().any(|a| a.hash.contains(t))),
+        })
+    }
+
+    pub fn asset_hash_is(&self, hashes: &[&str], mode: MatchMode) -> bool {
+        match mode {
+            MatchMode::Any => self
+                .assets
+                .iter()
+                .any(|a| hashes.iter().any(|h| a.hash.eq_ignore_ascii_case(h))),
+
+            MatchMode::All => hashes
+                .iter()
+                .all(|h| self.assets.iter().any(|a| a.hash.eq_ignore_ascii_case(h))),
+        }
+    }
 }
