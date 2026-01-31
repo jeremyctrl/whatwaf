@@ -93,6 +93,7 @@ whatwaf https://example.com
 | **Astra** | Astra Security | 🇮🇳 |
 | **ASPA** | Aspa Engineering Co. | 🇮🇷 |
 | **Barracuda** | Barracuda Networks, Inc. | 🇺🇸 |
+| **Check Point Application Security** | Check Point Software Technologies Ltd. | 🇮🇱 |
 | **Cloudflare** WAF | Cloudflare, Inc. | 🇺🇸 |
 | **Cloudfront** WAF | Amazon Web Services | 🇺🇸 |
 | **Datadome** | Datadome | 🇫🇷 |

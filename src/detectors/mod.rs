@@ -9,6 +9,7 @@ pub mod arvancloud;
 pub mod aspa;
 pub mod astra;
 pub mod barracuda;
+pub mod checkpoint;
 pub mod cloudflare;
 pub mod cloudfront;
 pub mod datadome;
