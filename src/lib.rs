@@ -23,7 +23,7 @@ pub struct ProbeResult {
     pub probe_name: String,
     pub url: String,
     pub status: u16,
-    pub detected_waf: Option<String>,
+    pub detected_wafs: Option<Vec<String>>,
 }
 
 #[derive(Debug)]
@@ -113,7 +113,8 @@ where
             probe_name: probe_name.to_string(),
             url: probe_url,
             status: resp.status,
-            detected_waf: run_detectors(&resp).map(|s| s.to_string()),
+            detected_wafs: run_detectors(&resp)
+                .map(|v| v.into_iter().map(|s| s.to_string()).collect()),
         };
 
         if let Some(cb) = on_probe.as_mut() {

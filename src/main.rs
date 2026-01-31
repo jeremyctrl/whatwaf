@@ -40,11 +40,25 @@ fn main() {
         Some(|r: &ProbeResult| {
             println!("[*] {} probe: url={}", r.probe_name, r.url);
 
-            match &r.detected_waf {
-                Some(waf) => {
-                    println!("\t[+] waf={} status={}", waf.to_lowercase(), r.status);
-                    println!("[~] the site {} is behind {} waf", url, waf);
+            match &r.detected_wafs {
+                Some(wafs) => {
+                    println!(
+                        "\t[+] waf=({}) status={}",
+                        wafs.join(", ").to_lowercase(),
+                        r.status
+                    );
+
+                    if wafs.len() == 1 {
+                        println!("[~] detected waf: {}", wafs[0]);
+                    } else {
+                        println!("[~] detected wafs:");
+                        for w in wafs {
+                            println!("\t- {}", w.to_lowercase());
+                        }
+                    }
+
                     detected = true;
+
                     false
                 }
                 None => {
