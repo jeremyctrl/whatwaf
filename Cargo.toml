@@ -9,7 +9,9 @@ description = "Heuristic web application firewall (WAF) detector."
 
 [dependencies]
 clap = { version = "4.5.48", features = ["derive"] }
+hex = "0.4.3"
 inventory = "0.3.21"
 once_cell = "1.21.3"
 regex = "1.12.2"
 reqwest = {version = "0.12.24", features = ["blocking"] }
+sha2 = "0.10.9"
