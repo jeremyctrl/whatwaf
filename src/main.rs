@@ -8,7 +8,7 @@ fn main() {
     let args = cli::Args::parse();
 
     if args.list {
-        println!("[~] whatwaf can currently recognize:");
+        println!("~ whatwaf can currently recognize:");
         for d in list_detectors() {
             println!("\t{}", d);
         }
@@ -19,7 +19,7 @@ fn main() {
     let url = match args.url {
         Some(u) => u,
         None => {
-            eprintln!("[!] no URL provided. usage: whatwaf [OPTIONS] <URL>");
+            eprintln!("! no URL provided. usage: whatwaf [OPTIONS] <URL>");
             return;
         }
     };
@@ -30,7 +30,7 @@ fn main() {
         proxy: args.proxy,
     };
 
-    println!("[*] scanning {}", url);
+    println!("* scanning {}", url);
 
     let mut detected = false;
 
@@ -38,20 +38,20 @@ fn main() {
         &url,
         config,
         Some(|r: &ProbeResult| {
-            println!("[*] {} probe: url={}", r.probe_name, r.url);
+            println!("* {} probe -> {}", r.probe_name, r.url);
 
             match &r.detected_wafs {
                 Some(wafs) => {
                     println!(
-                        "\t[+] waf=({}) status={}",
+                        "\t+ waf=({}) status={}",
                         wafs.join(", ").to_lowercase(),
                         r.status
                     );
 
                     if wafs.len() == 1 {
-                        println!("[~] detected waf: {}", wafs[0]);
+                        println!("~ detected waf: {}", wafs[0]);
                     } else {
-                        println!("[~] detected wafs:");
+                        println!("~ detected wafs ({}):", wafs.len());
                         for w in wafs {
                             println!("\t- {}", w.to_lowercase());
                         }
@@ -62,7 +62,7 @@ fn main() {
                     false
                 }
                 None => {
-                    println!("\t[-] no detection (status={})", r.status);
+                    println!("\t- no detection (status={})", r.status);
                     true
                 }
             }
@@ -70,11 +70,11 @@ fn main() {
     );
 
     if let Err(e) = res {
-        eprintln!("[!] scan failed: {}", e);
+        eprintln!("! scan failed: {}", e);
         return;
     }
 
     if !detected {
-        println!("[~] no waf detected for {}", url);
+        println!("~ no waf detected");
     }
 }
