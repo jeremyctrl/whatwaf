@@ -13,6 +13,7 @@ pub mod checkpoint;
 pub mod cloudflare;
 pub mod cloudfront;
 pub mod datadome;
+pub mod ddosguard;
 pub mod dotdefender;
 pub mod fortiweb;
 pub mod frontdoor;

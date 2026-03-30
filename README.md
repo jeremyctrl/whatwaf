@@ -97,6 +97,7 @@ whatwaf https://example.com
 | **Cloudflare** WAF | Cloudflare, Inc. | 🇺🇸 |
 | **Cloudfront** WAF | Amazon Web Services | 🇺🇸 |
 | **Datadome** | Datadome | 🇫🇷 |
+| **DDoS-Guard** WAF | IQWeb FZ-LLC | 🇷🇺 |
 | **DotDefender** | Applicure Technologies | 🇮🇱 |
 | **FortiWeb** | Fortinet, Inc. | 🇺🇸 |
 | **Front Door** (Azure) WAF | Microsoft Corporation | 🇺🇸 | 
