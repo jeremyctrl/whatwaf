@@ -20,6 +20,9 @@ pub struct HttpResponse {
 
 static SVG_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"(?is)<svg.*?</svg>").unwrap());
 
+static BASE64_DATA_RE: Lazy<Regex> =
+    Lazy::new(|| Regex::new(r#"data:(?P<mime>[\w/+]+);base64,(?P<data>[A-Za-z0-9+/=]+)"#).unwrap());
+
 pub fn fetch(
     client: &reqwest::blocking::Client,
     url: &str,
@@ -34,7 +37,7 @@ pub fn fetch(
         .map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string()))
         .collect();
     let body = res.text().unwrap_or_default();
-    let assets = extract_svg_assets(&body);
+    let assets = extract_assets(&body);
 
     Ok(HttpResponse {
         status,
@@ -54,19 +57,30 @@ pub fn add_param(original: &str, key: &str, value: &str) -> String {
     original.to_string()
 }
 
-pub fn extract_svg_assets(body: &str) -> Vec<Asset> {
-    SVG_RE
-        .find_iter(body)
-        .map(|m| {
-            let bytes = m.as_str().as_bytes();
+pub fn extract_assets(body: &str) -> Vec<Asset> {
+    let mut assets = Vec::new();
 
-            Asset {
-                mime: "image/svg+xml".into(),
-                hash: sha256_hex(bytes),
-                size: bytes.len(),
-            }
+    assets.extend(SVG_RE.find_iter(body).map(|m| {
+        let bytes = m.as_str().as_bytes();
+        Asset {
+            mime: "image/svg+xml".into(),
+            hash: sha256_hex(bytes),
+            size: bytes.len(),
+        }
+    }));
+
+    assets.extend(BASE64_DATA_RE.captures_iter(body).filter_map(|cap| {
+        let mime = cap.name("mime")?.as_str();
+        let data = cap.name("data")?.as_str();
+
+        Some(Asset {
+            mime: mime.to_string(),
+            hash: sha256_hex(data.as_bytes()),
+            size: data.len(),
         })
-        .collect()
+    }));
+
+    return assets;
 }
 
 fn sha256_hex(bytes: &[u8]) -> String {
