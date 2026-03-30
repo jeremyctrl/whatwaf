@@ -1674,7 +1674,7 @@ dependencies = [
 
 [[package]]
 name = "whatwaf"
-version = "1.9.1"
+version = "1.10.0"
 dependencies = [
  "clap",
  "hex",
