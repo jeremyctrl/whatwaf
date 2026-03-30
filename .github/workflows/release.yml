@@ -37,7 +37,9 @@ jobs:
         with:
           path: ./artifacts
       - run: |
-          gh release create $GITHUB_REF_NAME ./artifacts/* --generate-notes
+          mkdir -p ./release_assets
+          find ./artifacts -type f -exec cp {} ./release_assets/ \;
+          gh release create $GITHUB_REF_NAME ./release_assets/* --generate-notes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   publish:
