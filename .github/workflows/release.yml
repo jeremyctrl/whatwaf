@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: 'Release tag (e.g., v1.0.0)'
+        description: "Release tag (e.g., v1.0.0)"
         required: true
         type: string
 jobs:
@@ -29,8 +29,9 @@ jobs:
           targets: ${{ matrix.target }}
       - run: cargo build --release --target ${{ matrix.target }}
       - run: |
-          mv target/${{ matrix.target }}/release/whatwaf* whatwaf-${{ matrix.target }}*
-        shell: bash
+          for file in target/${{ matrix.target }}/release/whatwaf*; do
+            mv "$file" "whatwaf-${{ matrix.target }}${file##*/release/whatwaf}"
+          done
       - uses: actions/upload-artifact@v4
         with:
           name: whatwaf-${{ matrix.target }}
