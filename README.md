@@ -107,6 +107,7 @@ whatwaf https://example.com
 | **NexusGuard** | NexusGuard, Inc. | 🇸🇬 |
 | **Radware** WAF | Radware Ltd. | 🇮🇱 |
 | **SafeLine** | Chaitin Tech | 🇨🇳 |
+| **Vercel** WAF | Vercel Inc. | 🇺🇸 |
 | **Sucuri** | Sucuri, Inc | 🇺🇸 |
 | **Wordfence** | Defiant Inc. | 🇺🇸 |
 | **Zenedge** | Oracle Corporation | 🇺🇸 | 

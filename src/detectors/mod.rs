@@ -24,5 +24,6 @@ pub mod nexusguard;
 pub mod radware;
 pub mod safeline;
 pub mod sucuri;
+pub mod vercel;
 pub mod wordfence;
 pub mod zenedge;
